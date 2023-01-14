@@ -1,17 +1,20 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Head from 'next/head';
+import Link from 'next/link';
 
 const Layout = ({children}: any) => {
+  const { data: session } = useSession();
+
   return (
     <div>
       <Head>
-        <title>Spotify Stats</title>
+        <title></title>
         <meta name="description" content="Spotify Stats" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
 				<nav>
-					<h1>Spotify Stats</h1>
+					<Link href="/"><h1>Spotify Stats</h1></Link>
 					<ProfileLoginButton />
 				</nav>
         {children}
@@ -25,7 +28,7 @@ const ProfileLoginButton = () => {
 	if (session) {
 		return (
 			<>
-				<p>Logged in as {session?.user?.email}</p>
+				<Link href="/profile"><p>Logged in as {session?.user?.email}</p></Link>
 				<button onClick={() => signOut()}>Sign out</button>
 			</>
 		)
