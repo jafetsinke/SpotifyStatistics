@@ -14,7 +14,7 @@ const Layout = ({children}: any) => {
       </Head>
       <main>
 				<nav>
-					<Link href="/"><h1>Spotify Stats</h1></Link>
+					<Link href="/"><h2>Spotify Stats</h2></Link>
 					<ProfileLoginButton />
 				</nav>
         {children}
@@ -27,10 +27,7 @@ const ProfileLoginButton = () => {
 	const { data: session } = useSession();
 	if (session) {
 		return (
-			<>
-				<Link href="/profile"><p>Logged in as {session?.user?.email}</p></Link>
-				<button onClick={() => signOut()}>Sign out</button>
-			</>
+			<button onClick={() => signOut()}>Sign out</button>
 		)
 	} else {
 		return (
