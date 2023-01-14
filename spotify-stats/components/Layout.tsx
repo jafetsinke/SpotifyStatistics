@@ -25,7 +25,7 @@ const ProfileLoginButton = () => {
 	if (session) {
 		return (
 			<>
-				<p>Logged in as {session.user.email}</p>
+				<p>Logged in as {session?.user?.email}</p>
 				<button onClick={() => signOut()}>Sign out</button>
 			</>
 		)
