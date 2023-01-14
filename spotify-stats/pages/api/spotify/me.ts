@@ -1,4 +1,4 @@
-import {getUsersPlaylists} from '../../../lib/spotify'
+import {getOwnSpotifyProfile} from '../../../lib/spotify'
 import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
@@ -9,10 +9,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const refreshToken = session.token.refreshToken;
-  const response = await getUsersPlaylists(refreshToken);
-  const {items} = await response.json();
+  const response = await getOwnSpotifyProfile(refreshToken);
+  const responseJSON = await response.json();
 
-  return res.status(200).json({items});
+  return res.status(200).json({responseJSON});
 };
 
 export default handler;
