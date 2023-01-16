@@ -29,7 +29,7 @@ export default function Profile() {
 
   return (
     <>
-      <Image src={profile.images[0].url} alt="Your Spotify profile picture" width="200" height={200}></Image>
+      <Image src={profile.images[0].url} alt="Your Spotify profile picture" width="200" height="200"></Image>
       <h1>Profile</h1>
       <p><strong>Display name: </strong> {profile.display_name}</p>
       <p><strong>Followers: </strong> {profile.followers.total}</p>

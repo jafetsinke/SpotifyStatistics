@@ -47,11 +47,32 @@ button {
   border-radius: 0.5rem;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid var(--light-bg);
   margin-bottom: 1rem;
+}
+
+.card {
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--light-bg);
+  max-width: 50vw;
+  display: inline-block;
+}
+
+.card img {
+  width: 8rem;
+  height: 8rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
 }
