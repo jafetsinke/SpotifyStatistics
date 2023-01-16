@@ -1,4 +1,4 @@
-import {getUsersPlaylists} from '../../../lib/spotify'
+import {getUsersPlaylists} from '@/lib/spotify'
 import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
 

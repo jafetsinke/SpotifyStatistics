@@ -1,4 +1,4 @@
-import {getOwnSpotifyProfile} from '../../../lib/spotify'
+import {getOwnSpotifyProfile} from '@/lib/spotify'
 import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
 

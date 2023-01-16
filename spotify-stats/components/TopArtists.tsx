@@ -8,7 +8,7 @@ const TopArtists = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch('api/spotify/top/artists')
+    fetch('api/spotify/me/top/artists')
       .then((res) => res.json())
       .then((data) => {
         setArtists(data.items);
