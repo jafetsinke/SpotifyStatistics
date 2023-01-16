@@ -20,7 +20,7 @@ export default function Profile() {
   }, []);
 
   if (!session) {
-    return (<h1>Not signed in. pls sign in :)</h1>)
+    return (<h2>Not signed in. pls sign in :)</h2>)
   }
 
   if (isLoading || !profile) {
