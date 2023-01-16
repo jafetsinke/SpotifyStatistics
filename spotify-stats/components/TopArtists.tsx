@@ -6,9 +6,11 @@ const TopArtists = () => {
   const [artists, setArtists] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
+  const offset = 10;
+
   useEffect(() => {
     setLoading(true);
-    fetch('api/spotify/me/top/artists')
+    fetch('api/spotify/me/top/artists?time_range=short_term&offset=' + offset)
       .then((res) => res.json())
       .then((data) => {
         setArtists(data.items);
@@ -24,7 +26,7 @@ const TopArtists = () => {
     <>
       <h1>Top Artists</h1>
       {artists.map((artist: any, index) => (
-        artist.rank = index + 1,
+        artist.rank = index + offset + 1,
         <Artist artist={artist} key={artist.id}/>
       ))}
     </>
