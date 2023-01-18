@@ -1,12 +1,12 @@
-const clientID = process.env.SPOTIFY_CLIENT_ID;
-const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const authorization = Buffer.from(`${clientID}:${clientSecret}`).toString('base64');
+const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
+const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
+const AUTHORIZATION = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
 const getAccessToken = async (refresh_token: string) => {
   const response = await fetch("https://accounts.spotify.com/api/token", {
     method: 'POST',
     headers: {
-      Authorization: `Basic ${authorization}`,
+      Authorization: `Basic ${AUTHORIZATION}`,
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: new URLSearchParams({
