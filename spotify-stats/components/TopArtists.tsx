@@ -6,7 +6,7 @@ const TopArtists = () => {
   const [artists, setArtists] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
-  const offset = 10;
+  const offset = 0;
 
   useEffect(() => {
     setLoading(true);
