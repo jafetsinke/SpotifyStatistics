@@ -1,34 +1,67 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { SpotifyTimeRange } from "@/lib/spotify";
+
 
 const TopTracks = () => {
+  const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("short_term");
+
+  const handleTimeRangeChange = (event: any) => {
+    setTimeRange(event.target.value);
+  };
+
+  return (
+    <>
+      <h1>Top Tracks</h1>
+      <div>
+        <input type="radio" name="Short term" value="short_term" onChange={handleTimeRangeChange} checked={timeRange === "short_term"} /> ± 4 weeks
+        <input type="radio" name="Medium term" value="medium_term" onChange={handleTimeRangeChange} checked={timeRange === "medium_term"} /> ± 6 months 
+        <input type="radio" name="Long term" value="long_term" onChange={handleTimeRangeChange} checked={timeRange === "long_term"} /> All time
+      </div>
+      {Tracks(timeRange)}<br/>
+    </>
+  )
+};
+
+const Tracks = (timeRange: SpotifyTimeRange) => {
   const [tracks, setTracks] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
-  const offset = 0;
-
   useEffect(() => {
     setLoading(true);
-    fetch('api/spotify/me/top/tracks?time_range=short_term&offset=' + offset)
+    fetch(`api/spotify/me/top/tracks?time_range=${timeRange}`)
       .then((res) => res.json())
       .then((data) => {
         setTracks(data.items);
         setLoading(false);
       });
-  }, []);
+  }, [timeRange]);
 
   if (isLoading || !tracks) {
-    return (<p>Loading tracks...</p>)
+    return (<strong>Loading tracks...</strong>)
   }
+
+  const loadMore = () => {
+    //setLoading(true);
+    fetch(`api/spotify/me/top/tracks?time_range=${timeRange}&offset=${tracks.length}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTracks(tracks.concat(data.items));
+        setLoading(false);
+      });
+  };
 
   return (
     <>
-      <h1>Top Tracks</h1>
       {tracks.map((track: any, index) => (
-        track.rank = index + offset + 1,
+        track.rank = index + 1,
         <Track track={track} key={track.id}/>
       ))}
+      <br/>
+      {tracks.length < 50 &&
+        <button onClick={loadMore}>Load more</button>
+      }
     </>
   )
 };
@@ -38,7 +71,7 @@ const Track = ({ track }: any) => {
     <div className="card">
       <Image src={track.album.images[0].url} alt={track.name + " Spotify album cover"} width="256" height="256"></Image>
       <h2>{track.rank}. {track.name}</h2>
-      <p><strong>{artists(track.artists)}</strong></p>
+      <p><strong>{artistsLinks(track.artists)}</strong></p>
       <p><strong>Popularity: </strong>{track.popularity}</p>
       <progress value={track.popularity} max="100"></progress>
       <p><strong>Release date: </strong> {track.album.release_date}</p>
@@ -49,7 +82,7 @@ const Track = ({ track }: any) => {
     </div>
   )
 
-  function artists(artists: Array<any>) {
+  function artistsLinks(artists: Array<any>) {
     if (artists.length === 1) {
       return (
         <Link href={artists[0].external_urls.spotify} target="_blank">{artists[0].name}</Link>
