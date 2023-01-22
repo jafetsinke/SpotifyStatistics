@@ -11,11 +11,10 @@ const Layout = ({children}: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-          // TODO mixing tabs and spaces
-				<nav>
-					<Link href="/"><h2>Spotify Stats</h2></Link>
-					<ProfileLoginButton />
-				</nav>
+        <nav>
+          <Link href="/"><h2>Spotify Stats</h2></Link>
+          <ProfileLoginButton />
+        </nav>
         {children}
       </main>
     </div>
@@ -23,16 +22,16 @@ const Layout = ({children}: any) => {
 }
 
 const ProfileLoginButton = () => {
-	const { data: session } = useSession();
-	if (session) {
-		return (
-			<button onClick={() => signOut()}>Sign out</button>
-		)
-	} else {
-		return (
-			<button onClick={() => signIn()}>Sign in</button>
-		)
-	}
+  const { data: session } = useSession();
+  if (session) {
+    return (
+      <button onClick={() => signOut()}>Sign out</button>
+    )
+  } else {
+    return (
+      <button onClick={() => signIn()}>Sign in</button>
+    )
+  }
 }
 
 export default Layout;
