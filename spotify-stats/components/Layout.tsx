@@ -3,8 +3,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 const Layout = ({children}: any) => {
-  const { data: session } = useSession();
-
   return (
     <div>
       <Head>
@@ -13,6 +11,7 @@ const Layout = ({children}: any) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
+          // TODO mixing tabs and spaces
 				<nav>
 					<Link href="/"><h2>Spotify Stats</h2></Link>
 					<ProfileLoginButton />

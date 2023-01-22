@@ -4,6 +4,8 @@ import Link from "next/link";
 import { SpotifyTimeRange } from "@/lib/spotify";
 
 
+// TODO suggest to use TopTracks and TopArtists and factor out common code in function, instead of branching.
+// TODO use enum type for "tracks" | "artists"
 const Top = (props: {type: "tracks" | "artists"}) => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("short_term");
 
@@ -11,9 +13,11 @@ const Top = (props: {type: "tracks" | "artists"}) => {
     setTimeRange(event.target.value);
   };
 
+  // TODO better to not expose enum constants as literal strings in the UI - hence the below change
+  // TODO Plus/minus sign might not be internationally recognized as "approximately"
   return (
     <>
-      <h1>Top {props.type}</h1>
+      <h1>Top {props.type === "artists" ? "Artists" : "Tracks"}</h1>
       <div>
         <input type="radio" name="Short term" value="short_term" onChange={handleTimeRangeChange} checked={timeRange === "short_term"} /> ± 4 weeks
         <input type="radio" name="Medium term" value="medium_term" onChange={handleTimeRangeChange} checked={timeRange === "medium_term"} /> ± 6 months 
@@ -28,6 +32,7 @@ const Items = (timeRange: SpotifyTimeRange, type: "tracks" | "artists") => {
   const [items, setItems] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
+  // TODO suggest to wrap response in a typed interface - allows typing down the line, with support for IDE and compiler
   useEffect(() => {
     setLoading(true);
     fetch(`api/spotify/me/top/${type}?time_range=${timeRange}`)
@@ -52,10 +57,10 @@ const Items = (timeRange: SpotifyTimeRange, type: "tracks" | "artists") => {
 
   return (
     <>
-      {items.map((item: any, index) => (
-        item.rank = index + 1,
-        type === "tracks" ? <Track track={item} key={item.id}/> : <Artist artist={item} key={item.id}/>
-      ))}
+      {items.map((item: any, index) => {
+        const rankedItem = {...item, rank: index + 1};
+        return type === "tracks" ? <Track track={rankedItem} key={item.id}/> : <Artist artist={rankedItem} key={item.id}/>;
+      })}
       <br/>
       {items.length < 50 &&
         <button onClick={loadMore}>Load more</button>
@@ -143,10 +148,10 @@ const numberToReadableString = (number: number) => {
   }
 };
 
-const trackDurationToReadableString = (duration: number) => {
-  duration = duration / 1000;
-  const minutes = Math.floor(duration / 60);
-  const seconds = Math.round(duration - minutes * 60);
+const trackDurationToReadableString = (millis: number) => {
+  const totalSeconds = Math.round(millis / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
   return minutes + ":" + seconds.toString().padStart(2, "0");
 };
 
