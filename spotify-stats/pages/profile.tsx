@@ -27,6 +27,7 @@ export default function Profile() {
     return (<h1>Loading...</h1>)
   }
 
+  // TODO suggest to pick image based on target resolution (200x200)
   return (
     <>
       <Image src={profile.images[0].url} alt="Your Spotify profile picture" width="200" height="200"></Image>
