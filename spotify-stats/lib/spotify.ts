@@ -33,7 +33,7 @@ export const getUsersPlaylists = async (token: JWT) => {
   });
 };
 
-export const getUsersMostListened = async (type: "artists" | "tracks", token: JWT, limit: number, offset: number = 0, time_range: SpotifyTimeRange = "medium_term") => {
+export const getUsersMostListened = async (type: SpotifyTopItemsType, token: JWT, limit: number, offset: number = 0, time_range: SpotifyTimeRange = "medium_term") => {
   const accessToken = await getAccessToken(token);
   return fetch(`https://api.spotify.com/v1/me/top/${type}?limit=${limit}&offset=${offset}&time_range=${time_range}`, {
     headers: {
@@ -55,3 +55,4 @@ export const getOwnSpotifyProfile = async (token: JWT) => {
 // medium_term (approximately last 6 months),
 // short_term (approximately last 4 weeks). Default: medium_term
 export type SpotifyTimeRange = 'short_term' | 'medium_term' | 'long_term';
+export type SpotifyTopItemsType = 'artists' | 'tracks';

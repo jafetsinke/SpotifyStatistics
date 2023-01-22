@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SpotifyTimeRange } from "@/lib/spotify";
+import { SpotifyTimeRange, SpotifyTopItemsType } from "@/lib/spotify";
 
 
 // TODO suggest to use TopTracks and TopArtists and factor out common code in function, instead of branching.
-// TODO use enum type for "tracks" | "artists"
-const Top = (props: {type: "tracks" | "artists"}) => {
+const Top = (props: {type: SpotifyTopItemsType}) => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("short_term");
 
   const handleTimeRangeChange = (event: any) => {
@@ -28,7 +27,7 @@ const Top = (props: {type: "tracks" | "artists"}) => {
   )
 };
 
-const Items = (timeRange: SpotifyTimeRange, type: "tracks" | "artists") => {
+const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
   const [items, setItems] = useState([]);
   const [isLoading, setLoading] = useState(false);
 
@@ -41,7 +40,7 @@ const Items = (timeRange: SpotifyTimeRange, type: "tracks" | "artists") => {
         setItems(data.items);
         setLoading(false);
       });
-  }, [timeRange]);
+  }, [timeRange, type]);
 
   if (isLoading || !items) {
     return (<strong>Loading...</strong>)
