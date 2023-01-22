@@ -21,7 +21,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const limit = toInt(limitStr);
   const offset = toInt(offsetStr);
 
-  const response = await getUsersMostListened(type, session.token.refreshToken, limit, offset, time_range as SpotifyTimeRange);
+  const response = await getUsersMostListened(type, session.token, limit, offset, time_range as SpotifyTimeRange);
   
   if (response.status !== 200) {
     return res.status(response.status).json({error: 'Failed to get top artists from Spotify: ' + response.statusText});

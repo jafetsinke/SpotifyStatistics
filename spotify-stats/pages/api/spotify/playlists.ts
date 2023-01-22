@@ -8,8 +8,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).json({error: 'Unauthorized'});
   }
 
-  const refreshToken = session.token.refreshToken;
-  const response = await getUsersPlaylists(refreshToken);
+  const response = await getUsersPlaylists(session.token);
   const {items} = await response.json();
 
   return res.status(200).json({items});

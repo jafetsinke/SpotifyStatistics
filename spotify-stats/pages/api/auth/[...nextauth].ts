@@ -1,4 +1,4 @@
-import NextAuth, { Session } from "next-auth"
+import NextAuth from "next-auth"
 import SpotifyProvider from "next-auth/providers/spotify"
 
 if (!process.env.SPOTIFY_CLIENT_ID || !process.env.SPOTIFY_CLIENT_SECRET) {
@@ -18,9 +18,10 @@ export default NextAuth({
       if (user) {
         token.id = user.id;
       }
-      if (account?.refresh_token) {
+      if (account?.refresh_token && account?.access_token && account?.expires_at) {
         token.refreshToken = account.refresh_token;
-
+        token.accessToken = account.access_token;
+        token.accessTokenExpires = account.expires_at * 1000; // convert to ms from s
       }
       return token;
     },
