@@ -12,14 +12,12 @@ const Top = (props: {type: SpotifyTopItemsType}) => {
     setTimeRange(event.target.value);
   };
 
-  // TODO better to not expose enum constants as literal strings in the UI - hence the below change
-  // TODO Plus/minus sign might not be internationally recognized as "approximately"
   return (
     <>
       <h1>Top {props.type === "artists" ? "Artists" : "Tracks"}</h1>
       <div>
-        <input type="radio" name="Short term" value="short_term" onChange={handleTimeRangeChange} checked={timeRange === "short_term"} /> ± 4 weeks
-        <input type="radio" name="Medium term" value="medium_term" onChange={handleTimeRangeChange} checked={timeRange === "medium_term"} /> ± 6 months 
+        <input type="radio" name="Short term" value="short_term" onChange={handleTimeRangeChange} checked={timeRange === "short_term"} /> about 4 weeks
+        <input type="radio" name="Medium term" value="medium_term" onChange={handleTimeRangeChange} checked={timeRange === "medium_term"} /> about 6 months 
         <input type="radio" name="Long term" value="long_term" onChange={handleTimeRangeChange} checked={timeRange === "long_term"} /> All time
       </div>
       {Items(timeRange, props.type)}<br/>
