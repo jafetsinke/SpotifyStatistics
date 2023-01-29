@@ -45,6 +45,7 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
   }
 
   const loadMore = () => {
+    console.log(items.length)
     fetch(`api/spotify/me/top/${type}?time_range=${timeRange}&offset=${items.length}`)
       .then((res) => res.json())
       .then((data) => {
@@ -54,6 +55,7 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
 
   return (
     <>
+      <p><strong>Average Popularity: {averagePopularity(items)}</strong></p>
       {items.map((item: any, index) => {
         const rankedItem = {...item, rank: index + 1};
         return type === "tracks" ? <Track track={rankedItem} key={item.id}/> : <Artist artist={rankedItem} key={item.id}/>;
@@ -114,8 +116,8 @@ function album(track: any) {
   if (track.album.album_type === "ALBUM") {
     return (
       <>
-        <p><strong>Album: </strong>{track.album.name}</p>
         <Link href={track.album.external_urls.spotify} target="_blank">View album on Spotify</Link>
+        <p><strong>Album: </strong>{track.album.name}</p>
       </>
     )
   } else {
@@ -144,6 +146,14 @@ const numberToReadableString = (number: number) => {
     return number;
   }
 };
+
+const averagePopularity = (items: any[]) => {
+  let total = 0;
+  items.forEach((item) => {
+    total += item.popularity;
+  });
+  return Math.round(total / items.length);
+}
 
 const trackDurationToReadableString = (millis: number) => {
   const totalSeconds = Math.round(millis / 1000);
