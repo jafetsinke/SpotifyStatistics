@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { artistsLinks } from '@/components/Top';
 
-export default function Profile() {
+export default function TopTracksStats() {
   const { data: session } = useSession()
 
   const [tracks, setTracks] = useState<any>(null);
