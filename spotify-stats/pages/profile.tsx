@@ -7,15 +7,12 @@ export default function Profile() {
   const { data: session } = useSession()
 
   const [profile, setProfile] = useState<any>(null);
-  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     fetch('api/spotify/me')
       .then((res) => res.json())
       .then((data) => {
         setProfile(data.responseJSON);
-        setLoading(false);
       });
   }, []);
 
@@ -23,7 +20,7 @@ export default function Profile() {
     return (<h2>Not signed in. pls sign in :)</h2>)
   }
 
-  if (isLoading || !profile) {
+  if (!profile) {
     return (<h1>Loading...</h1>)
   }
 

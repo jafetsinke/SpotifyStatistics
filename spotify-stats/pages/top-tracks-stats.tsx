@@ -7,15 +7,12 @@ export default function TopTracksStats() {
   const { data: session } = useSession()
 
   const [tracks, setTracks] = useState<any>(null);
-  const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
-    setLoading(true);
     fetch('/api/spotify/me/top/tracks')
       .then((res) => res.json())
       .then((tracks) => {
         setTracks(tracks.items);
-        setLoading(false);
 
         const trackIds = tracks.items.map((track: any) => track.id);
         fetch('/api/spotify/audio-features?id=' + trackIds.join(','))
@@ -36,7 +33,7 @@ export default function TopTracksStats() {
     return (<h2>Not signed in. pls sign in :)</h2>)
   }
 
-  if (isLoading || !tracks) {
+  if (!tracks) {
     return (<h1>Loading...</h1>)
   }
 

@@ -27,20 +27,17 @@ const Top = (props: {type: SpotifyTopItemsType}) => {
 
 const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
   const [items, setItems] = useState([]);
-  const [isLoading, setLoading] = useState(false);
 
   // TODO suggest to wrap response in a typed interface - allows typing down the line, with support for IDE and compiler
   useEffect(() => {
-    setLoading(true);
     fetch(`api/spotify/me/top/${type}?time_range=${timeRange}`)
       .then((res) => res.json())
       .then((data) => {
         setItems(data.items);
-        setLoading(false);
       });
   }, [timeRange, type]);
 
-  if (isLoading || !items) {
+  if (!items) {
     return (<strong>Loading...</strong>)
   }
 
