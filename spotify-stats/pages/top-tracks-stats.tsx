@@ -50,56 +50,58 @@ export default function TopTracksStats() {
       <p><strong>average liveness:</strong> {averageOfKeyInArray("liveness", tracks)}</p>
       <p><strong>average valence:</strong> {averageOfKeyInArray("valence", tracks)}</p>
       <p><strong>average tempo:</strong> {averageOfKeyInArray("tempo", tracks)}</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Track</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Release Date</th>
-            <th>Popularity</th>
-            <th>Type</th>
-            <th>id</th>
-            <th>danceability</th>
-            <th>energy</th>
-            <th>key</th>
-            <th>loudness</th>
-            <th>mode</th>
-            <th>speechiness</th>
-            <th>acousticness</th>
-            <th>instrumentalness</th>
-            <th>liveness</th>
-            <th>valence</th>
-            <th>tempo</th>
-            <th>time_signature</th>
-          </tr>
-        </thead>
-        <tbody>
-          {tracks.map((track: any) => (
-            <tr key={track.id}>
-              <td>{track.name}</td>
-              <td>{artistsLinks(track.artists)}</td>
-              <td><Link href={track.album.external_urls.spotify} target="_blank">{track.album.name}</Link></td>
-              <td>{track.album.release_date}</td>
-              <td>{track.popularity}</td>
-              <td>{track.album.album_type}</td>
-              <td>{track.id}</td>
-              <td>{track.danceability}</td>
-              <td>{track.energy}</td>
-              <td>{track.key}</td>
-              <td>{track.loudness}</td>
-              <td>{track.mode}</td>
-              <td>{track.speechiness}</td>
-              <td>{track.acousticness}</td>
-              <td>{track.instrumentalness}</td>
-              <td>{track.liveness}</td>
-              <td>{track.valence}</td>
-              <td>{track.tempo}</td>
-              <td>{track.time_signature}</td>
+      <div className="tableContainer">
+        <table>
+          <thead>
+            <tr>
+              <th>Track</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Release Date</th>
+              <th>Popularity</th>
+              <th>Type</th>
+              <th>id</th>
+              <th>danceability</th>
+              <th>energy</th>
+              <th>key</th>
+              <th>loudness</th>
+              <th>mode</th>
+              <th>speechiness</th>
+              <th>acousticness</th>
+              <th>instrumentalness</th>
+              <th>liveness</th>
+              <th>valence</th>
+              <th>tempo</th>
+              <th>time_signature</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {tracks.map((track: any) => (
+              <tr key={track.id}>
+                <td>{track.name}</td>
+                <td>{artistsLinks(track.artists)}</td>
+                <td><Link href={track.album.external_urls.spotify} target="_blank">{track.album.name}</Link></td>
+                <td>{track.album.release_date}</td>
+                <td>{track.popularity}</td>
+                <td>{track.album.album_type}</td>
+                <td>{track.id}</td>
+                <td>{track.danceability}</td>
+                <td>{track.energy}</td>
+                <td>{track.key}</td>
+                <td>{track.loudness}</td>
+                <td>{track.mode}</td>
+                <td>{track.speechiness}</td>
+                <td>{track.acousticness}</td>
+                <td>{track.instrumentalness}</td>
+                <td>{track.liveness}</td>
+                <td>{track.valence}</td>
+                <td>{track.tempo}</td>
+                <td>{track.time_signature}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   )
 }

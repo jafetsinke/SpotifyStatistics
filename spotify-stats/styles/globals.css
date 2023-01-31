@@ -78,13 +78,15 @@ nav {
   border-radius: 0.5rem;
 }
 
-tr, td {
-  padding: 0.5rem 1rem;
+.tableContainer {
+  overflow: scroll;
+  max-width: 100vw;
+  height: 50vh;
+  margin: 5rem;
 }
 
-table {
-  overflow: scroll;
-  max-width: 1000px;
+tr, td {
+  padding: 0.5rem 1rem;
 }
 
 thead {
