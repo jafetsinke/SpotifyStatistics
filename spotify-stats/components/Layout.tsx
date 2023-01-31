@@ -15,6 +15,7 @@ const Layout = ({children}: any) => {
           <Link href="/"><h2>Spotify Stats</h2></Link>
           <Link href="/profile">Profile</Link>
           <Link href="/top-tracks-stats">Top Track Stats</Link>
+          <Link href="/recommendations">Recommendations</Link>
           <ProfileLoginButton />
         </nav>
         {children}
