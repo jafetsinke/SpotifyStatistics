@@ -85,9 +85,14 @@ nav {
   margin: 5rem;
 }
 
-tr, td {
+td, th {
   padding: 0.5rem 1rem;
 }
+
+tr:nth-child(even) {
+  background-color: rgba(128, 128, 128, 0.25);
+}
+
 
 thead {
   background-color: var(--main-color);
