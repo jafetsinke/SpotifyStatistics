@@ -77,3 +77,20 @@ nav {
   object-fit: cover;
   border-radius: 0.5rem;
 }
+
+tr, td {
+  padding: 0.5rem 1rem;
+}
+
+table {
+  overflow: scroll;
+  max-width: 1000px;
+}
+
+thead {
+  background-color: var(--main-color);
+  color: var(--dark-bg);
+  top: 0;
+  position: sticky;
+  margin: 0;
+}

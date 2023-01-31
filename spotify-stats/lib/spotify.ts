@@ -51,6 +51,29 @@ export const getOwnSpotifyProfile = async (token: JWT) => {
   });
 };
 
+export const getTracksAudioFeatures = async (token: JWT, trackId: string[]) => {
+  const accessToken = await getAccessToken(token);
+
+  // Spotify API only allows 100 tracks per request so we only send the first 100
+  if (trackId.length > 100) {
+    trackId = trackId.slice(0, 100);
+  }
+
+  if (trackId.length > 1) {
+    return fetch(`https://api.spotify.com/v1/audio-features?ids=${trackId.join(",")}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  } else {
+    return fetch(`https://api.spotify.com/v1/audio-features/${trackId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+  }
+};
+
 // long_term (calculated from several years of data and including all new data as it becomes available),
 // medium_term (approximately last 6 months),
 // short_term (approximately last 4 weeks). Default: medium_term

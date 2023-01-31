@@ -99,7 +99,7 @@ const Artist = ({ artist }: any) => {
   )
 };
 
-function artistsLinks(artists: Array<any>) {
+export function artistsLinks(artists: Array<any>) {
   if (artists.length === 1) {
     return (
       <Link href={artists[0].external_urls.spotify} target="_blank">{artists[0].name}</Link>
@@ -109,7 +109,6 @@ function artistsLinks(artists: Array<any>) {
       <Link href={artist.external_urls.spotify} target="_blank" key={artist.id}>{artist.name}, </Link>
     ))
   }
-  
 }
 
 function album(track: any) {
