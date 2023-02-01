@@ -1,6 +1,6 @@
 import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {getRecommendationsWithSeedTracks} from '@/lib/spotify';
+import {getRecommendationsWithSeedTracks, getUsersMostListened} from '@/lib/spotify';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({req});
@@ -8,15 +8,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(401).json({error: 'Unauthorized'});
   }
 
-  if (!req.query.seedTracks) {
-    return res.status(400).json({error: 'Missing track ids'});
-  }
-
-  if (typeof req.query.seedTracks === 'string') {
-    req.query.seedTracks = req.query.seedTracks.split(',');
-  }
-
-  const response = await getRecommendationsWithSeedTracks(session.token, req.query.seedTracks);
+  const topTracks = await getUsersMostListened('tracks', session.token, 5);
+  const topTracksJSON = await topTracks.json();
+  const trackIds = topTracksJSON.items.map((track: any) => track.id);
+  
+  const response = await getRecommendationsWithSeedTracks(session.token, trackIds);
   
   if (response.status !== 200) {
     return res.status(response.status).json({error: 'Failed to get recommendations: ' + response.statusText});
@@ -24,7 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const responseJSON = await response.json();
 
-  return res.status(200).json(responseJSON);
+  return res.status(200).json({...responseJSON, ...topTracksJSON});
 };
 
 export default handler;
