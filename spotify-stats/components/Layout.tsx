@@ -13,9 +13,11 @@ const Layout = ({children}: any) => {
       <main>
         <nav>
           <Link href="/"><h2>Spotify Stats</h2></Link>
-          <Link href="/profile">Profile</Link>
+          <Link href="/top-artists">Top Artists</Link>
+          <Link href="/top-tracks">Top Tracks</Link>
           <Link href="/top-tracks-stats">Top Track Stats</Link>
           <Link href="/recommendations">Recommendations</Link>
+          <Link href="/profile">Profile</Link>
           <ProfileLoginButton />
         </nav>
         {children}
