@@ -7,6 +7,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (session === null) {
     return res.status(401).json({error: 'Unauthorized'});
   }
+  
+  const {boldness} = req.query;
+
+  console.log('boldness', boldness)
 
   const topTracks = await getUsersMostListened('tracks', session.token, 5);
   const topTracksJSON = await topTracks.json();
