@@ -20,9 +20,9 @@ export default function TopTracksStats() {
           .then((audioFeatures) => {
               let i = 0;
               const tracksWithAudioFeatures = tracks.items.map((track: any) => {
-                const trackWithAudioGeatures = {...track, ...audioFeatures[i]};
+                const trackWithAudioFeatures = {...track, ...audioFeatures[i]};
                 i++;
-                return trackWithAudioGeatures;
+                return trackWithAudioFeatures;
               });
               setTracks(tracksWithAudioFeatures); 
           });
