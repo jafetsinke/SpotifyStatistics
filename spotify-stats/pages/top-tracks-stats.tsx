@@ -107,5 +107,6 @@ export default function TopTracksStats() {
 }
 
 function averageOfKeyInArray(key: string, array: any[]) {
-  return array.reduce((total, next) => total + next[key], 0)/ array.length;
+  const average = array.reduce((total, next) => total + next[key], 0)/ array.length;
+  return isNaN(average) ? "N/A" : average;
 }
