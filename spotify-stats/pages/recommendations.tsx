@@ -76,7 +76,7 @@ export default function Recommendations() {
   return (
     <>
       <h1>Recommendations</h1>
-      <p><strong>Based on your 5 top tracks:</strong></p>
+      <p><strong>Based on your top tracks of the past month:</strong></p>
       {recommendations && recommendations.items.map((track: any) => (
         <p key={track.id}>{track.artists.map((artist: any) => artist.name).join(', ')} - {track.name}</p>
       ))}

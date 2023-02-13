@@ -2,6 +2,7 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { artistsLinks } from '@/components/Top';
+import { averageOfKeyInArray } from '@/lib/utils';
 
 export default function TopTracksStats() {
   const { data: session } = useSession()
@@ -104,9 +105,4 @@ export default function TopTracksStats() {
       </div>
     </>
   )
-}
-
-function averageOfKeyInArray(key: string, array: any[]) {
-  const average = array.reduce((total, next) => total + next[key], 0)/ array.length;
-  return isNaN(average) ? "N/A" : average;
 }

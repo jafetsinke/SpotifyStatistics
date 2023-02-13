@@ -74,14 +74,16 @@ export const getTracksAudioFeatures = async (token: JWT, trackId: string[]) => {
   }
 };
 
-export const getRecommendationsWithSeedTracks = async (token: JWT, seedTracks: string[]) => {
+export const getRecommendationsWithSeedTracks = async (token: JWT, seedTracks: string[], targets: any) => {
   const accessToken = await getAccessToken(token);
 
   if (seedTracks.length > 5) {
     seedTracks = seedTracks.slice(0, 5);
   }
 
-  return fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=${seedTracks.join(",")}`, {
+  const targetString = Object.keys(targets).map((key) => `target_${key}=${targets[key]}`).join("&");
+
+  return fetch(`https://api.spotify.com/v1/recommendations?seed_tracks=${seedTracks.join(",")}&` + targetString, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
