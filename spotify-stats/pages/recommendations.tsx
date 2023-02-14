@@ -69,6 +69,10 @@ export default function Recommendations() {
     return (<h2>Not signed in. pls sign in :)</h2>)
   }
 
+  if (recommendations?.error) {
+    return (<h2>Error: {recommendations.error}</h2>)
+  }
+
   // if (!recommendations) {
   //   return (<h1>Loading...</h1>)
   // }
@@ -82,8 +86,8 @@ export default function Recommendations() {
       ))}
       <br/>
       <p><strong>Recommendation Boldness slider</strong></p>
-      <input type="range" min="1" max="100" value={boldness} onChange={handleSliderChange}></input>
-      <p>Value: {boldness} - {getBoldnessString(1, 100, boldness)}</p>
+      <input type="range" min="0" max="100" value={boldness} onChange={handleSliderChange}></input>
+      <p>Value: {boldness} - {getBoldnessString(0, 100, boldness)}</p>
       <div className="tableContainer">
         <table>
           <thead>

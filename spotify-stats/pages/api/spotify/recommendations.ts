@@ -38,9 +38,6 @@ const getValuesFromBoldness = (boldness: number, features: any) => {
     acousticness: 0.5,
     danceability: 0.5,
     energy: 0.5,
-    instrumentalness: 0.5,
-    liveness: 0.5,
-    speechiness: 0.5,
     valence: 0.5,
   };
 
@@ -79,7 +76,7 @@ const getValuesFromBoldness = (boldness: number, features: any) => {
   }
 
   // TODO: improve popularity calculation
-  values.popularity = randomNum(0, 100 - boldness);
+  values.popularity = Math.floor(randomNum(0, (100 - boldness)));
 
   return values;
 }
@@ -89,9 +86,6 @@ const getAudioFeatureArrays = (features: any[]) => {
     acousticness: [],
     danceability: [],
     energy: [],
-    instrumentalness: [],
-    liveness: [],
-    speechiness: [],
     valence: [],
   };
   
