@@ -11,24 +11,31 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const boldness = req.query.boldness || 50;
+  const boldnessMultiplier = Number(boldness) / 100;
 
-  const topTracks = await getUsersMostListened('tracks', session.token, 50, 0, "short_term");
+  const topTracks = await getUsersMostListened('tracks', session.token, 50, 0, "medium_term");
   const topTracksJSON = await topTracks.json();
   const trackIds = topTracksJSON.items.map((track: any) => track.id);
-  
-  const topTracksAudioFeatures = await getTracksAudioFeatures(session.token, trackIds);
-  const topTracksAudioFeaturesJSON = await topTracksAudioFeatures.json();
 
-  const targetFeatures = getValuesFromBoldness(Number(boldness), topTracksAudioFeaturesJSON.audio_features);
-  
   // get seed tracks
   // higher boldness means less tracks used for seed, boldness=100 > 1 track, boldness=0 > 4 tracks
   // higher boldness will use tracks lower in the top listened list
-  const boldnessMultiplier = Number(boldness) / 100;
-  const seedTrackOffset = Math.round(randomNum(0, 5 * boldnessMultiplier));
+  const seedTrackOffset = Math.round(randomNum(1, 5 * boldnessMultiplier));
   const seedTracksPos = Math.round(boldnessMultiplier * 40);
   const seedTracksAmount = (4 * (1 - boldnessMultiplier)) + 1;
   const seedTracks = trackIds.splice(seedTracksPos + seedTrackOffset, seedTracksAmount);
+  
+  const topTracksAudioFeatures = await getTracksAudioFeatures(session.token, trackIds);
+  const topTracksAudioFeaturesJSON = await topTracksAudioFeatures.json();
+  const targetFeatures = getFeaturesWithBoldness(Number(boldness), topTracksAudioFeaturesJSON.audio_features);
+
+  // when boldness is above 50 we will start using the popularity to get recommendations
+  if (boldnessMultiplier >= 0.5) {
+    const medianPopularity = medianOfKeyInArray('popularity', topTracksJSON.items);
+    const popularityLower = medianPopularity * (1 - boldnessMultiplier);
+    const popularityUpper = medianPopularity - (Math.pow(boldnessMultiplier, 2) * 0.75 * medianPopularity);
+    targetFeatures.popularity = Math.round(randomNum(popularityLower, popularityUpper));
+  }
 
   const response = await getRecommendationsWithSeedTracks(session.token, seedTracks, targetFeatures);
   
@@ -41,9 +48,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({targetFeatures, ...responseJSON});
 };
 
-const getValuesFromBoldness = (boldness: number, features: any) => {
+const getFeaturesWithBoldness = (boldness: number, features: any) => {
 
-  const featuresToUse = ['acousticness', 'danceability', 'energy', 'valence'];
+  const featuresToUse = ['acousticness', 'danceability', 'valence'];
   const values: any = {};
 
   for (const feature of featuresToUse) {
@@ -79,9 +86,6 @@ const getValuesFromBoldness = (boldness: number, features: any) => {
 
     values[feature] = Number(randomValue.toFixed(6));
   }
-
-  // TODO: improve popularity calculation
-  values.popularity = Math.floor(randomNum(0, (100 - boldness)));
 
   return values;
 }
