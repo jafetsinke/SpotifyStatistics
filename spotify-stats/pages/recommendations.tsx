@@ -80,11 +80,7 @@ export default function Recommendations() {
   return (
     <>
       <h1>Recommendations</h1>
-      <p><strong>Based on your top tracks of the past month:</strong></p>
-      {recommendations && recommendations.items.map((track: any) => (
-        <p key={track.id}>{track.artists.map((artist: any) => artist.name).join(', ')} - {track.name}</p>
-      ))}
-      <br/>
+      <p>Based on your top tracks of the past month</p>
       <p><strong>Recommendation Boldness slider</strong></p>
       <input type="range" min="0" max="100" value={boldness} onChange={handleSliderChange}></input>
       <p>Value: {boldness} - {getBoldnessString(0, 100, boldness)}</p>

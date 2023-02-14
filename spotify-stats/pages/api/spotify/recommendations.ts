@@ -2,6 +2,7 @@ import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import {getRecommendationsWithSeedTracks, getTracksAudioFeatures, getUsersMostListened} from '@/lib/spotify';
 import { randomNum } from '@/lib/utils';
+import { medianOfKeyInArray } from '@/lib/utils';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({req});
@@ -14,12 +15,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const topTracks = await getUsersMostListened('tracks', session.token, 50, 0, "short_term");
   const topTracksJSON = await topTracks.json();
   const trackIds = topTracksJSON.items.map((track: any) => track.id);
+  
   const topTracksAudioFeatures = await getTracksAudioFeatures(session.token, trackIds);
   const topTracksAudioFeaturesJSON = await topTracksAudioFeatures.json();
 
-  const targetValues = getValuesFromBoldness(Number(boldness), topTracksAudioFeaturesJSON.audio_features);
-  
-  const response = await getRecommendationsWithSeedTracks(session.token, trackIds.splice(0, 5), targetValues);
+  const targetFeatures = getValuesFromBoldness(Number(boldness), topTracksAudioFeaturesJSON.audio_features);
+
+  const response = await getRecommendationsWithSeedTracks(session.token, trackIds.splice(0, 5), targetFeatures);
   
   if (response.status !== 200) {
     return res.status(response.status).json({error: 'Failed to get recommendations: ' + response.statusText});
@@ -27,23 +29,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const responseJSON = await response.json();
 
-  return res.status(200).json({targetValues, ...responseJSON, ...topTracksJSON});
+  return res.status(200).json({targetFeatures, ...responseJSON});
 };
 
 const getValuesFromBoldness = (boldness: number, features: any) => {
-  
-  const audioFeatureArrays = getAudioFeatureArrays(features);
 
-  const values: any = {
-    acousticness: 0.5,
-    danceability: 0.5,
-    energy: 0.5,
-    valence: 0.5,
-  };
+  const featuresToUse = ['acousticness', 'danceability', 'energy', 'valence'];
+  const values: any = {};
 
-  for (let feature in values) {
+  for (const feature of featuresToUse) {
     // using the median as the starting value
-    const median = getMedian(audioFeatureArrays[feature]);
+    const median = medianOfKeyInArray(feature, features);
     const roundedMedian = Number(median.toFixed(6));
 
     // get the difference between the median and the upper and lower bounds
@@ -79,34 +75,6 @@ const getValuesFromBoldness = (boldness: number, features: any) => {
   values.popularity = Math.floor(randomNum(0, (100 - boldness)));
 
   return values;
-}
-
-const getAudioFeatureArrays = (features: any[]) => {
-  let audioFeatureArrays: any = {
-    acousticness: [],
-    danceability: [],
-    energy: [],
-    valence: [],
-  };
-  
-  for (let i = 0; i < features.length; i++) {
-    for (let feature in audioFeatureArrays) {
-      audioFeatureArrays[feature].push(features[i][feature]);
-    }
-  }
-  
-  return audioFeatureArrays;
-}
-
-const getMedian = (values: number[]) => {
-  const sorted = values.sort((a, b) => a - b);
-  const middle = Math.floor(sorted.length / 2);
-
-  if (sorted.length % 2) {
-    return sorted[middle];
-  }
-
-  return (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
 export default handler;
