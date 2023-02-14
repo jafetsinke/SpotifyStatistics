@@ -89,6 +89,18 @@ export const getRecommendationsWithSeedTracks = async (token: JWT, seedTracks: s
     },
   });
 };
+
+export const saveSongsToLibrary = async (token: JWT, trackIds: string[]) => {
+  const accessToken = await getAccessToken(token);
+
+  return fetch(`https://api.spotify.com/v1/me/tracks?ids=${trackIds.join(",")}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
 // long_term (calculated from several years of data and including all new data as it becomes available),
 // medium_term (approximately last 6 months),
 // short_term (approximately last 4 weeks). Default: medium_term
