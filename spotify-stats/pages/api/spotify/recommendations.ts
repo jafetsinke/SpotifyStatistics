@@ -20,8 +20,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const topTracksAudioFeaturesJSON = await topTracksAudioFeatures.json();
 
   const targetFeatures = getValuesFromBoldness(Number(boldness), topTracksAudioFeaturesJSON.audio_features);
+  
+  // get seed tracks
+  // higher boldness means less tracks used for seed, boldness=100 > 1 track, boldness=0 > 4 tracks
+  // higher boldness will use tracks lower in the top listened list
+  const boldnessMultiplier = Number(boldness) / 100;
+  const seedTrackOffset = Math.round(randomNum(0, 5 * boldnessMultiplier));
+  const seedTracksPos = Math.round(boldnessMultiplier * 40);
+  const seedTracksAmount = (4 * (1 - boldnessMultiplier)) + 1;
+  const seedTracks = trackIds.splice(seedTracksPos + seedTrackOffset, seedTracksAmount);
 
-  const response = await getRecommendationsWithSeedTracks(session.token, trackIds.splice(0, 5), targetFeatures);
+  const response = await getRecommendationsWithSeedTracks(session.token, seedTracks, targetFeatures);
   
   if (response.status !== 200) {
     return res.status(response.status).json({error: 'Failed to get recommendations: ' + response.statusText});
