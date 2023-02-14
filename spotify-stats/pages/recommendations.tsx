@@ -84,6 +84,7 @@ export default function Recommendations() {
       <p><strong>Recommendation Boldness slider</strong></p>
       <input type="range" min="0" max="100" value={boldness} onChange={handleSliderChange}></input>
       <p>Value: {boldness} - {getBoldnessString(0, 100, boldness)}</p>
+      <p><i>Preview quality is limited, full quality streaming available on Spotify</i></p>
       <div className="tableContainer">
         <table>
           <thead>
