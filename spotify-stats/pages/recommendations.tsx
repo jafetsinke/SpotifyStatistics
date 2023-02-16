@@ -65,6 +65,14 @@ export default function Recommendations() {
     return boldnessStrings[index] || boldnessStrings[boldnessStrings.length - 1];
   }
 
+  function likeSong(id: string) {
+    console.log("like song", id)
+    fetch('/api/spotify/me/save-songs?ids=' + id)
+      .then((response) => {
+        console.log(response)
+    });
+  }
+
   if (!session) {
     return (<h2>Not signed in. pls sign in :)</h2>)
   }
@@ -73,9 +81,9 @@ export default function Recommendations() {
     return (<h2>Error: {recommendations.error}</h2>)
   }
 
-  // if (!recommendations) {
-  //   return (<h1>Loading...</h1>)
-  // }
+  if (!recommendations) {
+    return (<h1>Loading...</h1>)
+  }
 
   return (
     <>
@@ -94,6 +102,7 @@ export default function Recommendations() {
               <th>Album</th>
               <th>Popularity</th>
               <th>Preview</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -104,6 +113,7 @@ export default function Recommendations() {
                 <td>{track.album.name}</td>
                 <td>{track.popularity}</td>
                 <td>{trackPreview(track)}</td>
+                <td><button onClick={() => {likeSong(track.id)}}>I like this!</button></td>
               </tr>
             ))}
           </tbody>
