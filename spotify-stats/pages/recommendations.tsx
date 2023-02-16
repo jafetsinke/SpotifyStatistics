@@ -65,14 +65,6 @@ export default function Recommendations() {
     return boldnessStrings[index] || boldnessStrings[boldnessStrings.length - 1];
   }
 
-  function likeSong(id: string) {
-    console.log("like song", id)
-    fetch('/api/spotify/me/save-songs?ids=' + id)
-      .then((response) => {
-        console.log(response)
-    });
-  }
-
   if (!session) {
     return (<h2>Not signed in. pls sign in :)</h2>)
   }
@@ -113,13 +105,39 @@ export default function Recommendations() {
                 <td>{track.album.name}</td>
                 <td>{track.popularity}</td>
                 <td>{trackPreview(track)}</td>
-                <td><button onClick={() => {likeSong(track.id)}}>I like this!</button></td>
+                <td><LikeButton id={track.id}></LikeButton></td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
     </>
+  )
+}
+
+function LikeButton(props: any) {
+  const id = props.id;
+
+  const [liked, setLiked] = useState<boolean>(false);
+
+  function handleClick() {
+    if (!liked) {
+      fetch('/api/spotify/me/save-songs?ids=' + id)
+      .then((response) => {
+        setLiked(response.status === 200);
+      });
+    } else {
+      fetch('/api/spotify/me/remove-songs?ids=' + id)
+      .then((response) => {
+        setLiked(response.status === 200);
+      });
+    }
+  }
+
+  return (
+    <button onClick={handleClick}>
+      {liked ? "Remove" : "Like song"}
+    </button>
   )
 }
 
