@@ -42,7 +42,6 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
   }
 
   const loadMore = () => {
-    console.log(items.length)
     fetch(`api/spotify/me/top/${type}?time_range=${timeRange}&offset=${items.length}`)
       .then((res) => res.json())
       .then((data) => {

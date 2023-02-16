@@ -16,7 +16,6 @@ export default function Recommendations() {
     fetch('/api/spotify/recommendations?boldness=' + throttledBoldness)
       .then((res) => res.json())
       .then((recommendations) => {
-        console.log(recommendations)
         setRecommendations(recommendations);
     });
     console.log("fetching recommendations with boldness: " + throttledBoldness);
@@ -36,14 +35,12 @@ export default function Recommendations() {
       // last update was more than interval ago, so update now
       setThrottledBoldness(value);
       boldnessLastChanged.current = now;
-      console.log("updating boldness immediately", value)
     } else {
       boldnessQueue.current.push(value);
       setBoldnessChangeCooldown(true);
 
       if (!boldnessChangeCooldown) {
         setTimeout(() => {
-          console.log("cooldown finished");
           setBoldnessChangeCooldown(false);
           throttledBoldnessDelayedUpdate();
         }, interval)
@@ -136,7 +133,7 @@ function LikeButton(props: any) {
 
   return (
     <button onClick={handleClick}>
-      {liked ? "Remove" : "Like song"}
+      {liked ? "Remove" : "Like"}
     </button>
   )
 }

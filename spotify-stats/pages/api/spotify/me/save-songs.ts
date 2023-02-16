@@ -16,7 +16,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const response = await saveSongsToLibrary(session.token, req.query.ids);
-  console.log(response);
 
   return res.status(response.status).json({saved: req.query.ids});
 };
