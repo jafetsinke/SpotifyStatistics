@@ -93,6 +93,14 @@ tr:nth-child(even) {
   background-color: rgba(128, 128, 128, 0.25);
 }
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td img {
+  border-radius: 0.25rem;
+}
 
 thead {
   background-color: var(--main-color);
