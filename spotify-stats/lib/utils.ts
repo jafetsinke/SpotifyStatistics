@@ -21,3 +21,23 @@ export function medianOfKeyInArray(key: string, array: any[]) {
 export function randomNum(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
+
+// returns the album art url for a track that has the nearest resolution to the size parameter
+export function getImageURLWithTargetResolution(images: any[], size: number) {
+  if (images.length === 1) {
+    return images[0].url;
+  } else if (images.length > 1) {
+    let closestImage = images[0];
+    let closestDiff = Math.abs(closestImage.width - size);
+    for (const image of images) {
+      const diff = Math.abs(image.width - size);
+      if (diff < closestDiff) {
+        closestDiff = diff;
+        closestImage = image;
+      }
+    }
+    return closestImage.url;
+  } else {
+    return "/album-art-placeholder.jpg";
+  }
+}

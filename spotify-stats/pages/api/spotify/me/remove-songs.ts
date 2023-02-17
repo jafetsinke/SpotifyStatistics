@@ -16,7 +16,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const response = await removeSongsFromLibrary(session.token, req.query.ids);
-  console.log(response);
 
   return res.status(response.status).json({removed: req.query.ids});
 };

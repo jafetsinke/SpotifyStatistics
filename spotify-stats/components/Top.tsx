@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { SpotifyTimeRange, SpotifyTopItemsType } from "@/lib/spotify";
+import { getImageURLWithTargetResolution } from "@/lib/utils";
 
 
 // TODO suggest to use TopTracks and TopArtists and factor out common code in function, instead of branching.
@@ -67,7 +68,7 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
 const Track = ({ track }: any) => {
   return (
     <div className="card">
-      <Image src={track.album.images[0].url} alt={track.name + " Spotify album cover"} width="256" height="256"></Image>
+      <Image src={getImageURLWithTargetResolution(track.album.images, 256)} alt={track.name + " Spotify album cover"} width="256" height="256"></Image>
       <h2>{track.rank}. {track.name}</h2>
       <p><strong>{artistsLinks(track.artists)}</strong></p>
       <p><strong>Popularity: </strong>{track.popularity}</p>
@@ -84,7 +85,7 @@ const Track = ({ track }: any) => {
 const Artist = ({ artist }: any) => {
   return (
     <div className="card">
-      <Image src={artist.images[0].url} alt={artist.name + " Spotify profile picture"} width="256" height="256"></Image>
+      <Image src={getImageURLWithTargetResolution(artist.images, 256)} alt={artist.name + " Spotify profile picture"} width="256" height="256"></Image>
       <h2>{artist.rank}. {artist.name}</h2>
       <p><strong>Followers: </strong> {numberToReadableString(artist.followers.total)}</p>
       <p><strong>Popularity: </strong> {artist.popularity}</p>

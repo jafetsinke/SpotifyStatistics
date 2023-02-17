@@ -1,6 +1,8 @@
 import { useSession } from 'next-auth/react'
 import Link from 'next/link';
 import React, { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
+import { getImageURLWithTargetResolution } from '@/lib/utils';
 
 export default function Recommendations() {
   const { data: session } = useSession();
@@ -86,6 +88,7 @@ export default function Recommendations() {
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Track</th>
               <th>Artist</th>
               <th>Album</th>
@@ -97,6 +100,7 @@ export default function Recommendations() {
           <tbody>
             {recommendations && recommendations.tracks.map((track: any) => (
               <tr key={track.id}>
+                <td><Image src={getImageURLWithTargetResolution(track.album.images, 64)} alt={`${track.name} Album image`} width="64" height="64" /></td>
                 <td><Link href={track.external_urls.spotify} target="_blank">{track.name}</Link></td>
                 <td>{track.artists.map((artist: any) => artist.name).join(', ')}</td>
                 <td>{track.album.name}</td>
