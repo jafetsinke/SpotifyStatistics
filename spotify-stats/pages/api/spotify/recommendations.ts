@@ -13,6 +13,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const boldness = req.query.boldness || 50;
   const boldnessMultiplier = Number(boldness) / 100;
 
+  if (boldness < 0 || boldness > 100) {
+    return res.status(400).json({error: 'Boldness out of range: must be between 0 and 100'});
+  }
+
   const topTracks = await getUsersMostListened('tracks', session.token, 50, 0, "medium_term");
   const topTracksJSON = await topTracks.json();
   const trackIds = topTracksJSON.items.map((track: any) => track.id);
