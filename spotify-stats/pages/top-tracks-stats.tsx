@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { artistsLinks } from '@/components/Top';
 import { averageOfKeyInArray } from '@/lib/utils';
+import { SpotifyAudioFeatures, SpotifyTrack } from '@/lib/spotify';
 
 export default function TopTracksStats() {
   const { data: session } = useSession()
@@ -15,15 +16,15 @@ export default function TopTracksStats() {
       .then((tracks) => {
         setTracks(tracks.items);
 
-        const trackIds = tracks.items.map((track: any) => track.id);
+        const trackIds = tracks.items.map((track: SpotifyTrack) => track.id);
         fetch('/api/spotify/audio-features?id=' + trackIds.join(','))
           .then((res) => res.json())
           .then((audioFeatures) => {
               let i = 0;
-              const tracksWithAudioFeatures = tracks.items.map((track: any) => {
-                const trackWithAudioFeatures = {...track, ...audioFeatures[i]};
+              const tracksWithAudioFeatures = tracks.items.map((track: SpotifyTrack) => {
+                const features = audioFeatures[i];
                 i++;
-                return trackWithAudioFeatures;
+                return {...track , audio_features: features};
               });
               setTracks(tracksWithAudioFeatures); 
           });
@@ -38,19 +39,20 @@ export default function TopTracksStats() {
     return (<h1>Loading...</h1>)
   }
 
+  const audioFeaturesArray: SpotifyAudioFeatures[] = tracks.map((track: SpotifyTrack) => track.audio_features);
   return (
     <>
-      <p><strong>average danceability:</strong> {averageOfKeyInArray("danceability", tracks)}</p>
-      <p><strong>average energy:</strong> {averageOfKeyInArray("energy", tracks)}</p>
-      <p><strong>average key:</strong> {averageOfKeyInArray("key", tracks)}</p>
-      <p><strong>average loudness:</strong> {averageOfKeyInArray("loudness", tracks)}</p>
-      <p><strong>average mode:</strong> {averageOfKeyInArray("mode", tracks)}</p>
-      <p><strong>average speechiness:</strong> {averageOfKeyInArray("speechiness", tracks)}</p>
-      <p><strong>average acousticness:</strong> {averageOfKeyInArray("acousticness", tracks)}</p>
-      <p><strong>average instrumentalness:</strong> {averageOfKeyInArray("instrumentalness", tracks)}</p>
-      <p><strong>average liveness:</strong> {averageOfKeyInArray("liveness", tracks)}</p>
-      <p><strong>average valence:</strong> {averageOfKeyInArray("valence", tracks)}</p>
-      <p><strong>average tempo:</strong> {averageOfKeyInArray("tempo", tracks)}</p>
+      <p><strong>average danceability:</strong> {averageOfKeyInArray("danceability", audioFeaturesArray)}</p>
+      <p><strong>average energy:</strong> {averageOfKeyInArray("energy", audioFeaturesArray)}</p>
+      <p><strong>average key:</strong> {averageOfKeyInArray("key", audioFeaturesArray)}</p>
+      <p><strong>average loudness:</strong> {averageOfKeyInArray("loudness", audioFeaturesArray)}</p>
+      <p><strong>average mode:</strong> {averageOfKeyInArray("mode", audioFeaturesArray)}</p>
+      <p><strong>average speechiness:</strong> {averageOfKeyInArray("speechiness", audioFeaturesArray)}</p>
+      <p><strong>average acousticness:</strong> {averageOfKeyInArray("acousticness", audioFeaturesArray)}</p>
+      <p><strong>average instrumentalness:</strong> {averageOfKeyInArray("instrumentalness", audioFeaturesArray)}</p>
+      <p><strong>average liveness:</strong> {averageOfKeyInArray("liveness", audioFeaturesArray)}</p>
+      <p><strong>average valence:</strong> {averageOfKeyInArray("valence", audioFeaturesArray)}</p>
+      <p><strong>average tempo:</strong> {averageOfKeyInArray("tempo", audioFeaturesArray)}</p>
       <div className="tableContainer">
         <table>
           <thead>
@@ -77,7 +79,7 @@ export default function TopTracksStats() {
             </tr>
           </thead>
           <tbody>
-            {tracks.map((track: any) => (
+            {tracks.map((track: SpotifyTrack) => (
               <tr key={track.id}>
                 <td>{track.name}</td>
                 <td>{artistsLinks(track.artists)}</td>
@@ -86,18 +88,18 @@ export default function TopTracksStats() {
                 <td>{track.popularity}</td>
                 <td>{track.album.album_type}</td>
                 <td>{track.id}</td>
-                <td>{track.danceability}</td>
-                <td>{track.energy}</td>
-                <td>{track.key}</td>
-                <td>{track.loudness}</td>
-                <td>{track.mode}</td>
-                <td>{track.speechiness}</td>
-                <td>{track.acousticness}</td>
-                <td>{track.instrumentalness}</td>
-                <td>{track.liveness}</td>
-                <td>{track.valence}</td>
-                <td>{track.tempo}</td>
-                <td>{track.time_signature}</td>
+                <td>{track.audio_features?.danceability}</td>
+                <td>{track.audio_features?.energy}</td>
+                <td>{track.audio_features?.key}</td>
+                <td>{track.audio_features?.loudness}</td>
+                <td>{track.audio_features?.mode}</td>
+                <td>{track.audio_features?.speechiness}</td>
+                <td>{track.audio_features?.acousticness}</td>
+                <td>{track.audio_features?.instrumentalness}</td>
+                <td>{track.audio_features?.liveness}</td>
+                <td>{track.audio_features?.valence}</td>
+                <td>{track.audio_features?.tempo}</td>
+                <td>{track.audio_features?.time_signature}</td>
               </tr>
             ))}
           </tbody>

@@ -112,8 +112,76 @@ export const removeSongsFromLibrary = async (token: JWT, trackIds: string[]) => 
   });
 };
 
+export interface SpotifyTrack {
+  name: string,
+  artists: SpotifyArtist[],
+  id: string,
+  album: SpotifyAlbum,
+  explicit: boolean,
+  external_urls: {
+    spotify: string
+  },
+  href: string,
+  duration_ms: number,
+  popularity: number,
+  preview_url: string,
+  audio_features: SpotifyAudioFeatures
+}
+
+export interface SpotifyAlbum {
+  name: string,
+  artists: SpotifyArtist[],
+  id: string,
+  album_type: SpotifyAlbumType,
+  external_urls: {
+    spotify: string
+  },
+  href: string,
+  images: SpotifyImage[],
+  release_date: string,
+  genres: string[],
+  popularity: number,
+}
+
+export interface SpotifyArtist {
+  name: string,
+  id: string,
+  external_urls: {
+    spotify: string
+  },
+  followers: {
+    total: number
+  },
+  genres: string[],
+  href: string,
+  images: SpotifyImage[],
+  popularity: number
+}
+
+export interface SpotifyImage {
+  url: string,
+  width: number,
+  height: number
+}
+
+export interface SpotifyAudioFeatures {
+  acousticness: number,
+  danceability: number,
+  energy: number,
+  instrumentalness: number,
+  key: number,
+  liveness: number,
+  loudness: number,
+  mode: number,
+  speechiness: number,
+  tempo: number,
+  time_signature: number,
+  valence: number,
+}
+
 // long_term (calculated from several years of data and including all new data as it becomes available),
 // medium_term (approximately last 6 months),
 // short_term (approximately last 4 weeks). Default: medium_term
 export type SpotifyTimeRange = 'short_term' | 'medium_term' | 'long_term';
 export type SpotifyTopItemsType = 'artists' | 'tracks';
+export type SpotifyAlbumType = 'ALBUM' | 'SINGLE' | 'COMPILATION';

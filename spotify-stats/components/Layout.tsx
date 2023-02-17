@@ -1,8 +1,9 @@
 import { useSession, signIn, signOut } from "next-auth/react"
 import Head from 'next/head';
 import Link from 'next/link';
+import React from "react";
 
-const Layout = ({children}: any) => {
+const Layout = ({children}: React.PropsWithChildren) => {
   return (
     <div>
       <Head>

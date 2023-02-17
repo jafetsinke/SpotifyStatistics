@@ -1,6 +1,6 @@
 import {getSession} from 'next-auth/react';
 import type { NextApiRequest, NextApiResponse } from 'next'
-import {getRecommendationsWithSeedTracks, getTracksAudioFeatures, getUsersMostListened} from '@/lib/spotify';
+import {getRecommendationsWithSeedTracks, getTracksAudioFeatures, getUsersMostListened, SpotifyAudioFeatures, SpotifyTrack} from '@/lib/spotify';
 import { randomNum } from '@/lib/utils';
 import { medianOfKeyInArray } from '@/lib/utils';
 
@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const topTracks = await getUsersMostListened('tracks', session.token, 50, 0, "medium_term");
   const topTracksJSON = await topTracks.json();
-  const trackIds = topTracksJSON.items.map((track: any) => track.id);
+  const trackIds = topTracksJSON.items.map((track: SpotifyTrack) => track.id);
 
   // get seed tracks
   // higher boldness means less tracks used for seed, boldness=100 > 1 track, boldness=0 > 4 tracks
@@ -52,7 +52,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   return res.status(200).json({targetFeatures, ...responseJSON});
 };
 
-const getFeaturesWithBoldness = (boldness: number, features: any) => {
+const getFeaturesWithBoldness = (boldness: number, features: SpotifyAudioFeatures[]) => {
 
   const featuresToUse = ['acousticness', 'danceability', 'valence'];
   const values: any = {};

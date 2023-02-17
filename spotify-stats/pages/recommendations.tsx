@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useEffect, useState, useRef } from 'react';
 import Image from 'next/image';
 import { getImageURLWithTargetResolution } from '@/lib/utils';
+import { SpotifyArtist, SpotifyTrack } from '@/lib/spotify';
 
 export default function Recommendations() {
   const { data: session } = useSession();
@@ -98,11 +99,11 @@ export default function Recommendations() {
             </tr>
           </thead>
           <tbody>
-            {recommendations && recommendations.tracks.map((track: any) => (
+            {recommendations && recommendations.tracks.map((track: SpotifyTrack) => (
               <tr key={track.id}>
                 <td><Image src={getImageURLWithTargetResolution(track.album.images, 64)} alt={`${track.name} Album image`} width="64" height="64" /></td>
                 <td><Link href={track.external_urls.spotify} target="_blank">{track.name}</Link></td>
-                <td>{track.artists.map((artist: any) => artist.name).join(', ')}</td>
+                <td>{track.artists.map((artist: SpotifyArtist) => artist.name).join(', ')}</td>
                 <td>{track.album.name}</td>
                 <td>{track.popularity}</td>
                 <td>{trackPreview(track)}</td>
@@ -116,7 +117,7 @@ export default function Recommendations() {
   )
 }
 
-function LikeButton(props: any) {
+function LikeButton(props: React.PropsWithChildren<{ id: string }>) {
   const id = props.id;
 
   const [liked, setLiked] = useState<boolean>(false);
@@ -142,7 +143,7 @@ function LikeButton(props: any) {
   )
 }
 
-function trackPreview(track: any) {
+function trackPreview(track: SpotifyTrack) {
   if (!track.preview_url) {
     return "No preview available";
   } else {

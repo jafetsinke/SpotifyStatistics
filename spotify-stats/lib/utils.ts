@@ -1,6 +1,8 @@
-// takes an array of objects and returns the average of the key
+import { SpotifyImage } from "./spotify";
+
+// takes an array of objects and returns the average of the key, undefined values are interpreted as 0
 export function averageOfKeyInArray(key: string, array: any[]) {
-  const average = array.reduce((total, next) => total + next[key], 0)/ array.length;
+  const average = array.reduce((total, next) => total + next ? next[key]: 0, 0)/ array.length;
   return isNaN(average) ? "N/A" : average;
 }
 
@@ -23,7 +25,7 @@ export function randomNum(min: number, max: number) {
 }
 
 // returns the album art url for a track that has the nearest resolution to the size parameter
-export function getImageURLWithTargetResolution(images: any[], size: number) {
+export function getImageURLWithTargetResolution(images: SpotifyImage[], size: number) {
   if (images.length === 1) {
     return images[0].url;
   } else if (images.length > 1) {

@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { SpotifyTimeRange, SpotifyTopItemsType } from "@/lib/spotify";
-import { getImageURLWithTargetResolution } from "@/lib/utils";
+import { SpotifyArtist, SpotifyTimeRange, SpotifyTopItemsType, SpotifyTrack } from "@/lib/spotify";
+import { averageOfKeyInArray, getImageURLWithTargetResolution } from "@/lib/utils";
 
 
 // TODO suggest to use TopTracks and TopArtists and factor out common code in function, instead of branching.
 const Top = (props: {type: SpotifyTopItemsType}) => {
   const [timeRange, setTimeRange] = useState<SpotifyTimeRange>("short_term");
 
-  const handleTimeRangeChange = (event: any) => {
-    setTimeRange(event.target.value);
+  const handleTimeRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTimeRange(event.target.value as SpotifyTimeRange);
   };
 
   return (
@@ -52,10 +52,15 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
 
   return (
     <>
-      <p><strong>Average Popularity: {averagePopularity(items)}</strong></p>
-      {items.map((item: any, index) => {
-        const rankedItem = {...item, rank: index + 1};
-        return type === "tracks" ? <Track track={rankedItem} key={item.id}/> : <Artist artist={rankedItem} key={item.id}/>;
+      <p><strong>Average Popularity: {averageOfKeyInArray("popularity", items)}</strong></p>
+      {items.map((item: SpotifyArtist | SpotifyTrack, index) => {
+        if (type === "tracks") {
+          const track = item as SpotifyTrack;
+          return <Track track={track} rank={index+1} key={item.id}/>
+        } else {
+          const artist = item as SpotifyArtist;
+          return <Artist artist={artist} rank={index+1} key={item.id}/>
+        }
       })}
       <br/>
       {items.length < 50 &&
@@ -65,11 +70,12 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
   )
 };
 
-const Track = ({ track }: any) => {
+const Track = (props: {track: SpotifyTrack, rank: number}) => {
+  const { track, rank } = props;
   return (
     <div className="card">
       <Image src={getImageURLWithTargetResolution(track.album.images, 256)} alt={track.name + " Spotify album cover"} width="256" height="256"></Image>
-      <h2>{track.rank}. {track.name}</h2>
+      <h2>{rank}. {track.name}</h2>
       <p><strong>{artistsLinks(track.artists)}</strong></p>
       <p><strong>Popularity: </strong>{track.popularity}</p>
       <progress value={track.popularity} max="100"></progress>
@@ -82,11 +88,12 @@ const Track = ({ track }: any) => {
   )
 };
 
-const Artist = ({ artist }: any) => {
+const Artist = (props: {artist: SpotifyArtist, rank: number}) => {
+  const { artist, rank } = props;
   return (
     <div className="card">
       <Image src={getImageURLWithTargetResolution(artist.images, 256)} alt={artist.name + " Spotify profile picture"} width="256" height="256"></Image>
-      <h2>{artist.rank}. {artist.name}</h2>
+      <h2>{rank}. {artist.name}</h2>
       <p><strong>Followers: </strong> {numberToReadableString(artist.followers.total)}</p>
       <p><strong>Popularity: </strong> {artist.popularity}</p>
       <progress value={artist.popularity} max="100"></progress>
@@ -96,19 +103,19 @@ const Artist = ({ artist }: any) => {
   )
 };
 
-export function artistsLinks(artists: Array<any>) {
+export function artistsLinks(artists: SpotifyArtist[]) {
   if (artists.length === 1) {
     return (
       <Link href={artists[0].external_urls.spotify} target="_blank">{artists[0].name}</Link>
     )
   } else {
-    return artists.map((artist: any) => (
+    return artists.map((artist: SpotifyArtist) => (
       <Link href={artist.external_urls.spotify} target="_blank" key={artist.id}>{artist.name}, </Link>
     ))
   }
 }
 
-function album(track: any) {
+function album(track: SpotifyTrack) {
   if (track.album.album_type === "ALBUM") {
     return (
       <>
@@ -142,14 +149,6 @@ const numberToReadableString = (number: number) => {
     return number;
   }
 };
-
-const averagePopularity = (items: any[]) => {
-  let total = 0;
-  items.forEach((item) => {
-    total += item.popularity;
-  });
-  return Math.round(total / items.length);
-}
 
 const trackDurationToReadableString = (millis: number) => {
   const totalSeconds = Math.round(millis / 1000);
