@@ -13,13 +13,7 @@ const Layout = ({children}: React.PropsWithChildren) => {
       </Head>
       <main>
         <nav>
-          <Link href="/"><h2>Spotify Stats</h2></Link>
-          <Link href="/top-artists">Top Artists</Link>
-          <Link href="/top-tracks">Top Tracks</Link>
-          <Link href="/top-tracks-stats">Top Track Stats</Link>
-          <Link href="/recommendations">Recommendations</Link>
-          <Link href="/profile">Profile</Link>
-          <ProfileLoginButton />
+          <SessionBasedNavItems />
         </nav>
         {children}
       </main>
@@ -27,15 +21,27 @@ const Layout = ({children}: React.PropsWithChildren) => {
   );
 }
 
-const ProfileLoginButton = () => {
+const SessionBasedNavItems = () => {
   const { data: session } = useSession();
   if (session) {
     return (
-      <button onClick={() => signOut()}>Sign out</button>
+      <>
+        <Link href="/"><h2>Spotify Stats</h2></Link>
+        <Link href="/top-artists">Top Artists</Link>
+        <Link href="/top-tracks">Top Tracks</Link>
+        <Link href="/top-tracks-stats">Top Track Stats</Link>
+        <Link href="/recommendations">Recommendations</Link>
+        <Link href="/playlist-builder">Playlist Builder</Link>
+        <Link href="/profile">Profile</Link>
+        <button onClick={() => signOut()}>Sign out</button>
+      </>
     )
   } else {
     return (
-      <button onClick={() => signIn()}>Sign in</button>
+      <>
+        <Link href="/"><h2>Spotify Stats</h2></Link>
+        <button onClick={() => signIn()}>Sign in</button>
+      </>
     )
   }
 }
