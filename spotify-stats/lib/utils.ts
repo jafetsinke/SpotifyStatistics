@@ -2,6 +2,7 @@ import { SpotifyImage } from "./spotify";
 
 // takes an array of objects and returns the average of the key, undefined values are interpreted as 0
 export function averageOfKeyInArray(key: string, array: any[]) {
+  console.log(key, array);
   const average = array.reduce((total, next) => total + next ? next[key]: 0, 0)/ array.length;
   return isNaN(average) ? "N/A" : average;
 }

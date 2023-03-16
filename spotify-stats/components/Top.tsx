@@ -52,7 +52,7 @@ const Items = (timeRange: SpotifyTimeRange, type: SpotifyTopItemsType) => {
 
   return (
     <>
-      <p><strong>Average Popularity: {averageOfKeyInArray("popularity", items)}</strong></p>
+      <p><strong>Average Popularity: {averagePopularity(items)}</strong></p>
       {items.map((item: SpotifyArtist | SpotifyTrack, index) => {
         if (type === "tracks") {
           const track = item as SpotifyTrack;
@@ -156,5 +156,14 @@ const trackDurationToReadableString = (millis: number) => {
   const seconds = totalSeconds % 60;
   return minutes + ":" + seconds.toString().padStart(2, "0");
 };
+
+const averagePopularity = (items: any[]) => {
+  let total = 0;
+  items.forEach((item) => {
+    total += item.popularity;
+  });
+  return Math.round(total / items.length);
+}
+
 
 export default Top;
