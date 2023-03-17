@@ -24,9 +24,18 @@ const getAccessToken = async (token: JWT) => {
   }  
 };
 
-export const getUsersPlaylists = async (token: JWT) => {
+export const getAllUsersPlaylists = async (token: JWT) => {
   const accessToken = await getAccessToken(token);
   return fetch("https://api.spotify.com/v1/me/playlists", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+};
+
+export const getPlaylist = async (token: JWT, id: string) => {
+  const accessToken = await getAccessToken(token);
+  return fetch("https://api.spotify.com/v1/playlists/" + id, {
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
@@ -177,6 +186,23 @@ export interface SpotifyAudioFeatures {
   tempo: number,
   time_signature: number,
   valence: number,
+}
+
+export interface SpotifyPlaylist {
+  collaborative: boolean,
+  description: string,
+  external_urls: {
+    spotify: string
+  },
+  href: string,
+  id: string,
+  images: SpotifyImage[],
+  name: string,
+  public: boolean,
+  tracks: {
+    href: string,
+    total: number
+  }
 }
 
 // long_term (calculated from several years of data and including all new data as it becomes available),
