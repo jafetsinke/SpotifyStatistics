@@ -201,8 +201,14 @@ export interface SpotifyPlaylist {
   public: boolean,
   tracks: {
     href: string,
-    total: number
+    total: number,
+    items: SpotifyPlaylistTrack[]
   }
+}
+
+export interface SpotifyPlaylistTrack {
+  added_at: string,
+  track: SpotifyTrack
 }
 
 // long_term (calculated from several years of data and including all new data as it becomes available),
